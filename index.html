@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Deku — Credit Card Sales Professional</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ─── RESET & BASE ─────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream:       #F5F1EB;
+  --cream-mid:   #EDE7DD;
+  --cream-deep:  #E4DDD2;
+  --white:       #FFFFFF;
+  --charcoal:    #2D2D2D;
+  --charcoal-2:  #4B4B4B;
+  --charcoal-3:  #7A7A7A;
+  --charcoal-4:  #A8A8A8;
+  --gold:        #88956A;
+  --gold-light:  #A5B285;
+  --gold-deep:   #6B7554;
+  --gold-tint:   rgba(136,149,106,.10);
+  --gold-border: rgba(136,149,106,.22);
+  --border:      rgba(45,45,45,.09);
+  --serif:       'Playfair Display', Georgia, serif;
+  --sans:        'DM Sans', sans-serif;
+  --radius-sm:   8px;
+  --radius:      14px;
+  --radius-lg:   22px;
+  --shadow-xs:   0 1px 4px rgba(45,45,45,.06);
+  --shadow-sm:   0 4px 16px rgba(45,45,45,.08);
+  --shadow-md:   0 8px 36px rgba(45,45,45,.11);
+  --ease:        cubic-bezier(.4,0,.2,1);
+  --ease-spring: cubic-bezier(.34,1.56,.64,1);
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--cream);
+  color: var(--charcoal);
+  font-family: var(--sans);
+  font-weight: 400;
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--gold-border); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+/* ─── UTILITIES ────────────────────────────────────── */
+.container { max-width: 1080px; margin: 0 auto; padding: 0 40px; }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-bottom: 14px;
+}
+.eyebrow-bar { width: 22px; height: 2px; background: var(--gold); border-radius: 2px; flex-shrink: 0; }
+.eyebrow-text {
+  font-size: .68rem; font-weight: 600; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--gold-deep); font-family: var(--sans);
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(1.95rem, 3.4vw, 2.8rem);
+  font-weight: 600; line-height: 1.18;
+  color: var(--charcoal); letter-spacing: -.01em;
+}
+.section-title em { color: var(--gold); font-style: italic; }
+
+.gold-rule {
+  width: 44px; height: 2px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  border-radius: 2px; margin: 20px 0 38px;
+}
+
+/* ─── NAV ──────────────────────────────────────────── */
+#nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+}
+#nav.scrolled .nav-inner {
+  background: rgba(245,241,235,.94);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  box-shadow: 0 1px 0 var(--border), var(--shadow-xs);
+  padding-top: 14px; padding-bottom: 14px;
+}
+.nav-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  max-width: 1080px; margin: 0 auto; padding: 22px 40px;
+  transition: padding .35s var(--ease), background .35s, box-shadow .35s;
+}
+.nav-logo {
+  font-family: var(--serif); font-size: 1.25rem; font-weight: 700;
+  color: var(--charcoal); letter-spacing: .01em;
+}
+.nav-logo .dot { color: var(--gold); }
+.nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+.nav-links a {
+  font-size: .82rem; font-weight: 500; color: var(--charcoal-2);
+  letter-spacing: .03em; padding-bottom: 3px;
+  border-bottom: 1.5px solid transparent;
+  transition: color .25s, border-color .25s;
+}
+.nav-links a:hover { color: var(--gold-deep); border-color: var(--gold); }
+.nav-btn {
+  background: var(--gold); color: var(--white) !important;
+  padding: 10px 24px; border-radius: 50px; font-weight: 600 !important;
+  font-size: .8rem !important; letter-spacing: .05em !important;
+  border-bottom: none !important;
+  box-shadow: 0 4px 14px rgba(136,149,106,.32);
+  transition: background .3s, transform .28s var(--ease-spring), box-shadow .3s !important;
+}
+.nav-btn:hover {
+  background: var(--gold-deep) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(136,149,106,.42) !important;
+}
+.hamburger {
+  display: none; cursor: pointer; background: none; border: none;
+  padding: 6px; gap: 5px; flex-direction: column;
+}
+.hamburger span {
+  display: block; width: 22px; height: 1.8px;
+  background: var(--charcoal); border-radius: 2px; transition: .3s;
+}
+
+/* Mobile overlay */
+.mob-overlay {
+  display: none; position: fixed; inset: 0; z-index: 190;
+  background: rgba(245,241,235,.97);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  flex-direction: column; align-items: center; justify-content: center; gap: 30px;
+}
+.mob-overlay.open { display: flex; }
+.mob-overlay a {
+  font-family: var(--serif); font-size: 2rem; font-weight: 600;
+  color: var(--charcoal); transition: color .25s;
+}
+.mob-overlay a:hover { color: var(--gold); }
+.mob-close {
+  position: absolute; top: 22px; right: 28px;
+  background: none; border: none; font-size: 1.6rem;
+  color: var(--charcoal-3); cursor: pointer; line-height: 1;
+}
+
+/* ─── HERO ─────────────────────────────────────────── */
+#hero {
+  min-height: 100svh; display: grid; place-items: center;
+  background: linear-gradient(148deg, #F5F1EB 0%, #EDE5D8 42%, #E2D9CC 100%);
+  padding: 130px 40px 80px; position: relative; overflow: hidden;
+}
+#hero::before {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.028'/%3E%3C/svg%3E");
+}
+.hero-glow { position: absolute; border-radius: 50%; pointer-events: none; }
+.hero-glow-1 {
+  width: 640px; height: 640px;
+  background: radial-gradient(circle, rgba(136,149,106,.13) 0%, transparent 68%);
+  top: -180px; right: -130px;
+}
+.hero-glow-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(136,149,106,.08) 0%, transparent 68%);
+  bottom: -100px; left: -90px;
+}
+.hero-content { position: relative; z-index: 2; text-align: center; max-width: 760px; }
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,.72); border: 1px solid var(--gold-border);
+  backdrop-filter: blur(8px); padding: 7px 18px 7px 10px;
+  border-radius: 50px; margin-bottom: 32px;
+  animation: fadeDown .7s var(--ease) both;
+}
+.badge-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--gold); flex-shrink: 0;
+  animation: pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(136,149,106,.5); }
+  50%      { box-shadow: 0 0 0 7px rgba(136,149,106,0); }
+}
+.badge-text {
+  font-size: .72rem; font-weight: 600; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--gold-deep);
+}
+
+.hero-name {
+  font-family: var(--serif);
+  font-size: clamp(3.8rem, 9vw, 7rem);
+  font-weight: 700; line-height: .96;
+  color: var(--charcoal); letter-spacing: -.025em;
+  margin-bottom: 18px;
+  animation: fadeUp .75s .1s var(--ease) both;
+}
+.hero-name-hl { position: relative; display: inline-block; }
+.hero-name-hl::after {
+  content: '';
+  position: absolute; left: 0; right: 0; bottom: 6px;
+  height: 4px; border-radius: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  opacity: .55; transform-origin: left;
+  animation: lineGrow .9s .82s var(--ease) both;
+}
+@keyframes lineGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+.hero-role {
+  font-size: .81rem; font-weight: 600; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--gold-deep);
+  margin-bottom: 22px;
+  animation: fadeUp .75s .2s var(--ease) both;
+}
+.hero-tagline {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  color: var(--charcoal-2); line-height: 1.65;
+  max-width: 520px; margin: 0 auto 44px;
+  animation: fadeUp .75s .3s var(--ease) both;
+}
+.hero-tagline::before { content: '\201C'; }
+.hero-tagline::after  { content: '\201D'; }
+
+.hero-actions {
+  display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+  animation: fadeUp .75s .42s var(--ease) both;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--gold); color: var(--white);
+  padding: 15px 34px; border-radius: 50px;
+  font-size: .88rem; font-weight: 600; letter-spacing: .04em;
+  box-shadow: 0 6px 22px rgba(136,149,106,.38);
+  transition: background .3s, transform .28s var(--ease-spring), box-shadow .3s;
+}
+.btn-primary:hover { background: var(--gold-deep); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(136,149,106,.46); }
+.btn-secondary {
+  display: inline-flex; align-items: center;
+  padding: 15px 32px; border-radius: 50px;
+  font-size: .88rem; font-weight: 600; letter-spacing: .04em;
+  border: 1.5px solid var(--cream-deep); color: var(--charcoal-2);
+  transition: border-color .3s, color .3s, transform .28s var(--ease-spring);
+}
+.btn-secondary:hover { border-color: var(--gold); color: var(--gold-deep); transform: translateY(-3px); }
+
+.hero-stats {
+  display: flex; justify-content: center; gap: 0;
+  margin-top: 72px; padding-top: 48px;
+  border-top: 1px solid rgba(45,45,45,.1);
+  animation: fadeUp .75s .56s var(--ease) both;
+  flex-wrap: wrap;
+}
+.stat-block {
+  flex: 1; min-width: 120px; max-width: 200px;
+  text-align: center; padding: 0 24px; position: relative;
+}
+.stat-block+.stat-block::before {
+  content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  height: 38px; width: 1px; background: rgba(45,45,45,.12);
+}
+.stat-num {
+  display: block; font-family: var(--serif); font-size: 2.2rem; font-weight: 700;
+  color: var(--gold-deep); line-height: 1; margin-bottom: 7px; letter-spacing: -.02em;
+}
+.stat-label {
+  font-size: .71rem; font-weight: 500; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--charcoal-3);
+}
+
+/* ─── SECTION BASE ─────────────────────────────────── */
+.section { padding: 106px 0; }
+.section.bg-white { background: var(--white); }
+.section.bg-cream { background: var(--cream); }
+.section.bg-mid   { background: linear-gradient(160deg, var(--cream) 0%, var(--cream-mid) 100%); }
+
+/* ─── ABOUT ────────────────────────────────────────── */
+.about-grid {
+  display: grid; grid-template-columns: 360px 1fr;
+  gap: 80px; align-items: center;
+}
+.about-visual { position: relative; }
+
+.about-card-shell {
+  border-radius: var(--radius-lg); overflow: visible;
+  position: relative;
+}
+.about-photo-frame {
+  width: 100%; aspect-ratio: 4/5; border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: linear-gradient(145deg, var(--cream-mid) 0%, var(--cream-deep) 100%);
+  box-shadow: var(--shadow-md); border: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.about-initials {
+  font-family: var(--serif); font-size: 7.5rem; font-weight: 700;
+  color: rgba(136,149,106,.22); line-height: 1; letter-spacing: -.04em; user-select: none;
+}
+.about-card-sub {
+  margin-top: 10px; font-size: .68rem; font-weight: 600;
+  letter-spacing: .2em; text-transform: uppercase; color: rgba(136,149,106,.5);
+}
+
+/* accent corners */
+.acc-tl {
+  position: absolute; top: -12px; left: -12px;
+  width: 70px; height: 70px; border-radius: 12px;
+  background: var(--gold); opacity: .28; z-index: -1;
+}
+.acc-br {
+  position: absolute; bottom: -12px; right: -12px;
+  width: 52px; height: 52px; border-radius: 10px;
+  border: 1.5px solid var(--gold-border); z-index: -1;
+}
+
+/* floating info cards */
+.float-card {
+  position: absolute;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 13px 17px;
+  box-shadow: var(--shadow-sm);
+  display: flex; align-items: center; gap: 11px;
+  white-space: nowrap;
+}
+.float-card-icon { font-size: 1.2rem; line-height: 1; }
+.float-card-lbl { font-size: .63rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--charcoal-4); }
+.float-card-val { font-size: .85rem; font-weight: 600; color: var(--gold-deep); }
+.fc-tr { top: -16px; right: -22px; }
+.fc-bl { bottom: -16px; left: -22px; }
+
+.about-text p {
+  font-size: .94rem; line-height: 1.95; color: var(--charcoal-2); margin-bottom: 16px;
+}
+.about-tags { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 30px; }
+.about-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--gold-tint); border: 1px solid var(--gold-border);
+  color: var(--gold-deep); padding: 7px 15px; border-radius: 50px;
+  font-size: .75rem; font-weight: 600; letter-spacing: .02em;
+}
+
+/* ─── TIMELINE ─────────────────────────────────────── */
+.timeline { padding-left: 30px; position: relative; }
+.timeline::before {
+  content: ''; position: absolute; left: 6px; top: 14px; bottom: 14px; width: 1.5px;
+  background: linear-gradient(to bottom, var(--gold) 0%, rgba(136,149,106,.12) 100%);
+}
+.tl-item { position: relative; margin-bottom: 32px; }
+.tl-item:last-child { margin-bottom: 0; }
+.tl-dot {
+  position: absolute; left: -30px; top: 20px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--cream); border: 2px solid var(--gold);
+  box-shadow: 0 0 0 5px rgba(136,149,106,.1);
+  transition: background .3s, transform .35s var(--ease-spring), box-shadow .3s;
+}
+.tl-item:hover .tl-dot {
+  background: var(--gold); transform: scale(1.3);
+  box-shadow: 0 0 0 7px rgba(136,149,106,.14);
+}
+.tl-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 30px 32px;
+  box-shadow: var(--shadow-xs);
+  transition: box-shadow .35s var(--ease), transform .35s var(--ease), border-color .35s;
+}
+.tl-item:hover .tl-card {
+  box-shadow: var(--shadow-sm); transform: translateX(5px); border-color: var(--gold-border);
+}
+.tl-bank {
+  font-size: .67rem; font-weight: 700; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--gold-deep); margin-bottom: 7px;
+}
+.tl-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+}
+.tl-role {
+  font-family: var(--serif); font-size: 1.15rem; font-weight: 600;
+  color: var(--charcoal); line-height: 1.25;
+}
+.tl-period {
+  flex-shrink: 0;
+  background: var(--gold-tint); border: 1px solid var(--gold-border);
+  color: var(--gold-deep); padding: 4px 13px; border-radius: 50px;
+  font-size: .68rem; font-weight: 600; letter-spacing: .07em; white-space: nowrap;
+  margin-top: 2px;
+}
+.tl-sep { width: 28px; height: 1px; background: var(--border); margin: 14px 0; }
+.tl-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.tl-list li {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: .88rem; line-height: 1.65; color: var(--charcoal-2);
+}
+.tl-list li::before {
+  content: ''; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--gold); flex-shrink: 0; margin-top: 8px;
+}
+
+/* ─── SKILLS ───────────────────────────────────────── */
+.skills-layout {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 26px;
+}
+.skill-group {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 30px 26px;
+  box-shadow: var(--shadow-xs); position: relative; overflow: hidden;
+  transition: border-color .3s, box-shadow .3s;
+}
+.skill-group::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light), transparent);
+}
+.skill-group:hover { border-color: var(--gold-border); box-shadow: var(--shadow-sm); }
+.skill-group-title {
+  font-family: var(--serif); font-size: 1rem; font-weight: 600;
+  color: var(--charcoal); margin-bottom: 18px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill {
+  border: 1.5px solid var(--border); background: transparent;
+  color: var(--charcoal-2); padding: 7px 15px; border-radius: 50px;
+  font-size: .78rem; font-weight: 400;
+  transition: border-color .25s, color .25s, background .25s, transform .22s var(--ease-spring);
+  cursor: default;
+}
+.pill:hover {
+  border-color: var(--gold); color: var(--gold-deep);
+  background: var(--gold-tint); transform: translateY(-2px);
+}
+
+/* ─── EDUCATION ────────────────────────────────────── */
+.edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.edu-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px;
+  box-shadow: var(--shadow-xs);
+  display: flex; align-items: flex-start; gap: 18px;
+  position: relative; overflow: hidden;
+  transition: border-color .3s, box-shadow .3s, transform .3s var(--ease);
+}
+.edu-card::after {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--gold); border-radius: 3px 0 0 3px;
+}
+.edu-card:hover { border-color: var(--gold-border); box-shadow: var(--shadow-sm); transform: translateY(-3px); }
+.edu-icon-wrap {
+  width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0;
+  background: var(--gold-tint); border: 1px solid var(--gold-border);
+  display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+}
+.edu-degree {
+  font-family: var(--serif); font-size: 1.02rem; font-weight: 600;
+  color: var(--charcoal); margin-bottom: 5px; line-height: 1.3;
+}
+.edu-inst { font-size: .79rem; font-weight: 600; color: var(--gold-deep); margin-bottom: 3px; }
+.edu-year { font-size: .75rem; color: var(--charcoal-4); }
+
+/* ─── CONTACT ──────────────────────────────────────── */
+#contact { background: linear-gradient(148deg, var(--cream) 0%, var(--cream-mid) 100%); }
+.contact-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 64px; align-items: start; }
+.contact-intro { font-size: .94rem; line-height: 1.95; color: var(--charcoal-2); margin-bottom: 36px; }
+.contact-list { display: flex; flex-direction: column; gap: 14px; }
+.ci {
+  display: flex; align-items: center; gap: 15px;
+  padding: 16px 18px; border-radius: var(--radius);
+  background: rgba(255,255,255,.75); border: 1px solid var(--border);
+  transition: border-color .3s, box-shadow .3s, transform .28s var(--ease-spring);
+}
+.ci:hover { border-color: var(--gold-border); box-shadow: var(--shadow-xs); transform: translateX(5px); }
+.ci-icon {
+  width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+  background: var(--gold-tint); border: 1px solid var(--gold-border);
+  display: flex; align-items: center; justify-content: center;
+}
+.ci-icon svg { width: 17px; height: 17px; fill: none; stroke: var(--gold-deep); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.ci-label { font-size: .67rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--charcoal-4); margin-bottom: 2px; }
+.ci-val { font-size: .9rem; color: var(--charcoal); }
+.ci-val a { transition: color .25s; }
+.ci-val a:hover { color: var(--gold-deep); }
+
+/* Contact form */
+.contact-form-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 38px;
+  box-shadow: var(--shadow-sm);
+}
+.form-heading {
+  font-family: var(--serif); font-size: 1.3rem; font-weight: 600;
+  color: var(--charcoal); margin-bottom: 26px;
+}
+.fg { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
+.fl {
+  font-size: .67rem; font-weight: 600; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--charcoal-3);
+}
+.fi, .ft {
+  background: var(--cream); border: 1.5px solid var(--border);
+  color: var(--charcoal); padding: 13px 17px; border-radius: 10px;
+  font-family: var(--sans); font-size: .9rem; font-weight: 400;
+  outline: none; resize: none; width: 100%;
+  transition: border-color .3s, box-shadow .3s, background .3s;
+  -webkit-appearance: none;
+}
+.fi:focus, .ft:focus {
+  border-color: var(--gold); background: var(--white);
+  box-shadow: 0 0 0 3.5px rgba(136,149,106,.11);
+}
+.fi::placeholder, .ft::placeholder { color: var(--charcoal-4); }
+.ft { min-height: 120px; }
+.form-btn {
+  width: 100%; background: var(--gold); color: var(--white);
+  border: none; padding: 15px 32px; border-radius: 50px;
+  font-family: var(--sans); font-size: .88rem; font-weight: 600;
+  letter-spacing: .05em; cursor: pointer; margin-top: 6px;
+  box-shadow: 0 6px 20px rgba(136,149,106,.36);
+  transition: background .3s, transform .28s var(--ease-spring), box-shadow .3s;
+}
+.form-btn:hover { background: var(--gold-deep); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(136,149,106,.44); }
+.form-btn:disabled { opacity: .7; pointer-events: none; }
+
+/* ─── FOOTER ───────────────────────────────────────── */
+footer {
+  background: var(--charcoal); color: rgba(255,255,255,.45);
+  padding: 36px 40px;
+}
+.footer-inner {
+  max-width: 1080px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-logo { font-family: var(--serif); font-size: 1.1rem; font-weight: 700; color: #FFF; }
+.footer-logo .dot { color: var(--gold-light); }
+.footer-copy { font-size: .75rem; }
+.footer-links { display: flex; gap: 22px; }
+.footer-links a { font-size: .75rem; color: rgba(255,255,255,.38); transition: color .25s; }
+.footer-links a:hover { color: var(--gold-light); }
+
+/* ─── REVEAL ANIMATIONS ────────────────────────────── */
+@keyframes fadeUp   { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:none; } }
+@keyframes fadeDown { from { opacity:0; transform:translateY(-16px); } to { opacity:1; transform:none; } }
+
+.reveal {
+  opacity: 0; transform: translateY(26px);
+  transition: opacity .72s var(--ease), transform .72s var(--ease);
+}
+.reveal.visible { opacity: 1; transform: none; }
+.d1 { transition-delay: .08s; }
+.d2 { transition-delay: .17s; }
+.d3 { transition-delay: .25s; }
+.d4 { transition-delay: .34s; }
+
+/* ─── RESPONSIVE ───────────────────────────────────── */
+@media (max-width: 980px) {
+  .nav-links, .nav-btn-li { display: none; }
+  .hamburger { display: flex; }
+  .about-grid { grid-template-columns: 1fr; gap: 50px; }
+  .about-photo-frame { aspect-ratio: 16/9; max-width: 420px; margin: 0 auto; }
+  .skills-layout { grid-template-columns: 1fr 1fr; }
+  .edu-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .container { padding: 0 28px; }
+  .nav-inner { padding: 18px 28px; }
+  .section { padding: 80px 0; }
+  .contact-form-card { padding: 28px 22px; }
+}
+@media (max-width: 620px) {
+  .skills-layout { grid-template-columns: 1fr; }
+  .hero-stats { flex-direction: column; align-items: center; gap: 24px; }
+  .stat-block::before { display: none; }
+  .hero-actions { flex-direction: column; align-items: center; }
+  .container { padding: 0 20px; }
+  .float-card { display: none; }
+  footer { padding: 28px 22px; }
+  footer .footer-inner { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- MOBILE OVERLAY -->
+<div class="mob-overlay" id="mobMenu">
+  <button class="mob-close" onclick="closeMob()" aria-label="Close">✕</button>
+  <a href="#about"      onclick="closeMob()">About</a>
+  <a href="#experience" onclick="closeMob()">Experience</a>
+  <a href="#skills"     onclick="closeMob()">Skills</a>
+  <a href="#education"  onclick="closeMob()">Education</a>
+  <a href="#contact"    onclick="closeMob()">Contact</a>
+</div>
+
+<!-- NAV -->
+<header id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="#hero">Deku<span class="dot">.</span></a>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#education">Education</a></li>
+        <li class="nav-btn-li"><a href="#contact" class="nav-btn">Let's Connect</a></li>
+      </ul>
+    </nav>
+    <button class="hamburger" onclick="openMob()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!--  HERO                                             -->
+<!-- ══════════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-glow hero-glow-1"></div>
+  <div class="hero-glow hero-glow-2"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <div class="badge-dot"></div>
+      <span class="badge-text">Credit Card Sales · 10 Years Experience</span>
+    </div>
+
+    <h1 class="hero-name">
+      <span class="hero-name-hl">Deku</span>
+    </h1>
+
+    <p class="hero-role">Senior Sales Executive &nbsp;·&nbsp; HDFC Bank</p>
+
+    <p class="hero-tagline">Helping you find the right credit card for your lifestyle.</p>
+
+    <div class="hero-actions">
+      <a class="btn-primary" href="#contact">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.06 6.06l.94-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Let's Connect
+      </a>
+      <a class="btn-secondary" href="#experience">View My Journey</a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-block">
+        <span class="stat-num">10+</span>
+        <span class="stat-label">Years in Banking</span>
+      </div>
+      <div class="stat-block">
+        <span class="stat-num">5,000+</span>
+        <span class="stat-label">Cards Managed</span>
+      </div>
+      <div class="stat-block">
+        <span class="stat-num">140%</span>
+        <span class="stat-label">2023 Target Hit</span>
+      </div>
+      <div class="stat-block">
+        <span class="stat-num">1,200+</span>
+        <span class="stat-label">Customers Onboarded</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!--  ABOUT                                            -->
+<!-- ══════════════════════════════════════════════════ -->
+<section id="about" class="section bg-white">
+  <div class="container">
+    <div class="about-grid">
+
+      <!-- Visual column -->
+      <div class="about-visual reveal">
+        <div class="about-card-shell">
+          <div class="acc-tl"></div>
+          <div class="about-photo-frame">
+            <span class="about-initials">D</span>
+            <span class="about-card-sub">Banking Sales Expert</span>
+          </div>
+          <div class="float-card fc-tr">
+            <span class="float-card-icon">🏆</span>
+            <div>
+              <div class="float-card-lbl">Top Performer</div>
+              <div class="float-card-val">Q3 2020 · Western Region</div>
+            </div>
+          </div>
+          <div class="float-card fc-bl">
+            <span class="float-card-icon">💳</span>
+            <div>
+              <div class="float-card-lbl">Portfolio</div>
+              <div class="float-card-val">5,000+ Active Cards</div>
+            </div>
+          </div>
+          <div class="acc-br"></div>
+        </div>
+      </div>
+
+      <!-- Text column -->
+      <div>
+        <div class="eyebrow reveal">
+          <div class="eyebrow-bar"></div>
+          <span class="eyebrow-text">About Me</span>
+        </div>
+        <h2 class="section-title reveal">A decade of <em>trusted</em><br>credit card expertise</h2>
+        <div class="gold-rule reveal"></div>
+
+        <div class="reveal d1">
+          <p>I'm a results-driven banking sales professional with <strong>10 years of hands-on experience</strong> in credit card acquisition, customer onboarding, and relationship management across India's leading private banks — Axis, ICICI, and HDFC.</p>
+          <p>I specialise in deeply understanding what customers truly need financially, and connecting them with credit card products that bring real, lasting value — not just closing a sale, but building a lasting relationship.</p>
+          <p>Currently at <strong>HDFC Bank</strong>, I lead a team of 8 sales representatives across the Mumbai region while managing a portfolio of over 5,000 active credit card customers.</p>
+        </div>
+
+        <div class="about-tags reveal d2">
+          <span class="about-tag">📍 Surat, Gujarat</span>
+          <span class="about-tag">📞 9090909090909</span>
+          <span class="about-tag">✉ deku12@gmail.com</span>
+          <span class="about-tag">🎓 B.Com, Mumbai University</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!--  EXPERIENCE                                       -->
+<!-- ══════════════════════════════════════════════════ -->
+<section id="experience" class="section bg-cream">
+  <div class="container">
+    <div class="eyebrow reveal">
+      <div class="eyebrow-bar"></div>
+      <span class="eyebrow-text">Work Experience</span>
+    </div>
+    <h2 class="section-title reveal">10 years across <em>India's</em><br>leading banks</h2>
+    <div class="gold-rule reveal"></div>
+
+    <div class="timeline">
+
+      <div class="tl-item reveal">
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-bank">HDFC Bank</div>
+          <div class="tl-head">
+            <div class="tl-role">Senior Sales Executive, Credit Cards</div>
+            <span class="tl-period">2021 – Present</span>
+          </div>
+          <div class="tl-sep"></div>
+          <ul class="tl-list">
+            <li>Leads a team of 8 sales representatives across the Mumbai region.</li>
+            <li>Achieved <strong>140% of annual credit card acquisition target</strong> in 2023.</li>
+            <li>Manages a portfolio of <strong>5,000+ active credit card customers</strong>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tl-item reveal d1">
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-bank">ICICI Bank</div>
+          <div class="tl-head">
+            <div class="tl-role">Sales Executive, Credit Cards</div>
+            <span class="tl-period">2018 – 2021</span>
+          </div>
+          <div class="tl-sep"></div>
+          <ul class="tl-list">
+            <li>Onboarded <strong>1,200+ new credit card customers</strong> across three years.</li>
+            <li>Recognised as <strong>"Top Performer Q3 2020"</strong> across the Western Region.</li>
+            <li>Conducted <strong>50+ corporate tie-up drives</strong> for bulk card issuance.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tl-item reveal d2">
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-bank">Axis Bank</div>
+          <div class="tl-head">
+            <div class="tl-role">Sales Associate, Retail Banking</div>
+            <span class="tl-period">2015 – 2018</span>
+          </div>
+          <div class="tl-sep"></div>
+          <ul class="tl-list">
+            <li>Started in retail banking and transitioned to credit card sales within the first year.</li>
+            <li>Built a referral network that consistently generated <strong>30% of monthly leads</strong>.</li>
+            <li>Trained <strong>15 new joiners</strong> on effective sales pitch and objection handling techniques.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!--  SKILLS                                           -->
+<!-- ══════════════════════════════════════════════════ -->
+<section id="skills" class="section bg-white">
+  <div class="container">
+    <div class="eyebrow reveal">
+      <div class="eyebrow-bar"></div>
+      <span class="eyebrow-text">Key Skills</span>
+    </div>
+    <h2 class="section-title reveal">What I bring <em>to</em> the table</h2>
+    <div class="gold-rule reveal"></div>
+
+    <div class="skills-layout">
+      <div class="skill-group reveal">
+        <div class="skill-group-title">Sales &amp; Acquisition</div>
+        <div class="pills">
+          <span class="pill">Credit Card Sales</span>
+          <span class="pill">Card Acquisition</span>
+          <span class="pill">Cold Outreach</span>
+          <span class="pill">Lead Generation</span>
+          <span class="pill">Corporate Tie-ups</span>
+        </div>
+      </div>
+      <div class="skill-group reveal d1">
+        <div class="skill-group-title">Customer &amp; Compliance</div>
+        <div class="pills">
+          <span class="pill">Customer Need Analysis</span>
+          <span class="pill">KYC Documentation</span>
+          <span class="pill">Regulatory Compliance</span>
+          <span class="pill">Customer Onboarding</span>
+          <span class="pill">Relationship Management</span>
+        </div>
+      </div>
+      <div class="skill-group reveal d2">
+        <div class="skill-group-title">Leadership &amp; Tools</div>
+        <div class="pills">
+          <span class="pill">Team Leadership</span>
+          <span class="pill">Salesforce CRM</span>
+          <span class="pill">Negotiation</span>
+          <span class="pill">Objection Handling</span>
+          <span class="pill">Sales Training</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!--  EDUCATION                                        -->
+<!-- ══════════════════════════════════════════════════ -->
+<section id="education" class="section bg-mid">
+  <div class="container">
+    <div class="eyebrow reveal">
+      <div class="eyebrow-bar"></div>
+      <span class="eyebrow-text">Education &amp; Certifications</span>
+    </div>
+    <h2 class="section-title reveal">Academic &amp; professional <em>credentials</em></h2>
+    <div class="gold-rule reveal"></div>
+
+    <div class="edu-grid">
+      <div class="edu-card reveal">
+        <div class="edu-icon-wrap">🎓</div>
+        <div>
+          <div class="edu-degree">Bachelor of Commerce (B.Com)</div>
+          <div class="edu-inst">Mumbai University</div>
+          <div class="edu-year">Class of 2015</div>
+        </div>
+      </div>
+      <div class="edu-card reveal d1">
+        <div class="edu-icon-wrap">📜</div>
+        <div>
+          <div class="edu-degree">AMFI Certified Mutual Fund Distributor</div>
+          <div class="edu-inst">Association of Mutual Funds in India</div>
+          <div class="edu-year">Industry Certification</div>
+        </div>
+      </div>
+      <div class="edu-card reveal d2">
+        <div class="edu-icon-wrap">📋</div>
+        <div>
+          <div class="edu-degree">NISM Series V-A</div>
+          <div class="edu-inst">Mutual Fund Distributors Certification</div>
+          <div class="edu-year">National Institute of Securities Markets</div>
+        </div>
+      </div>
+      <div class="edu-card reveal d3">
+        <div class="edu-icon-wrap">🏅</div>
+        <div>
+          <div class="edu-degree">Top Performer Award</div>
+          <div class="edu-inst">ICICI Bank — Western Region</div>
+          <div class="edu-year">Q3 2020 Recognition</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!--  CONTACT                                          -->
+<!-- ══════════════════════════════════════════════════ -->
+<section id="contact" class="section">
+  <div class="container">
+    <div class="eyebrow reveal">
+      <div class="eyebrow-bar"></div>
+      <span class="eyebrow-text">Get in Touch</span>
+    </div>
+    <h2 class="section-title reveal">Let's find the right card<br>for your <em>lifestyle</em></h2>
+    <div class="gold-rule reveal"></div>
+
+    <div class="contact-grid">
+
+      <!-- Left: info -->
+      <div class="reveal">
+        <p class="contact-intro">
+          Whether you're exploring your first credit card, upgrading to a premium tier, or trying to find a card that matches your spending habits — I'm here to guide you with clear, honest, personalised advice. No jargon, just the right fit.
+        </p>
+        <div class="contact-list">
+          <div class="ci">
+            <div class="ci-icon">
+              <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.06 6.06l.94-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <div>
+              <div class="ci-label">Phone</div>
+              <div class="ci-val"><a href="tel:9090909090909">9090909090909</a></div>
+            </div>
+          </div>
+          <div class="ci">
+            <div class="ci-icon">
+              <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div>
+              <div class="ci-label">Email</div>
+              <div class="ci-val"><a href="mailto:deku12@gmail.com">deku12@gmail.com</a></div>
+            </div>
+          </div>
+          <div class="ci">
+            <div class="ci-icon">
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div>
+              <div class="ci-label">Location</div>
+              <div class="ci-val">Surat, Gujarat, India</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: form -->
+      <div class="contact-form-card reveal d1">
+        <div class="form-heading">Send a message</div>
+        <div class="fg">
+          <label class="fl" for="fname">Your Name</label>
+          <input class="fi" type="text" id="fname" placeholder="e.g. Rahul Sharma" required/>
+        </div>
+        <div class="fg">
+          <label class="fl" for="fphone">Phone Number</label>
+          <input class="fi" type="tel" id="fphone" placeholder="e.g. 98XXXXXXXX" required/>
+        </div>
+        <div class="fg">
+          <label class="fl" for="fmsg">Message</label>
+          <textarea class="ft" id="fmsg" placeholder="Tell me about the credit card you're looking for, or any questions you have…" required></textarea>
+        </div>
+        <button class="form-btn" id="formBtn" onclick="submitForm(event)">Send Message →</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-logo">Deku<span class="dot">.</span></span>
+    <span class="footer-copy">© 2026 Deku · Credit Card Sales Professional · Surat, Gujarat</span>
+    <div class="footer-links">
+      <a href="tel:9090909090909">Call</a>
+      <a href="mailto:deku12@gmail.com">Email</a>
+      <a href="#hero">Back to Top ↑</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* Sticky nav */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 44);
+}, { passive: true });
+
+/* Scroll reveal */
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -28px 0px' });
+revealEls.forEach(el => io.observe(el));
+
+/* Mobile menu */
+function openMob() {
+  document.getElementById('mobMenu').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMob() {
+  document.getElementById('mobMenu').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* Form */
+function submitForm(e) {
+  e.preventDefault();
+  const n = document.getElementById('fname').value.trim();
+  const p = document.getElementById('fphone').value.trim();
+  const m = document.getElementById('fmsg').value.trim();
+  if (!n || !p || !m) { alert('Please fill in all fields before sending.'); return; }
+  const btn = document.getElementById('formBtn');
+  btn.textContent = "✓ Sent! I'll be in touch soon.";
+  btn.disabled = true;
+  btn.style.background = 'var(--gold-deep)';
+  setTimeout(() => {
+    btn.textContent = 'Send Message →';
+    btn.disabled = false; btn.style.background = '';
+    document.getElementById('fname').value = '';
+    document.getElementById('fphone').value = '';
+    document.getElementById('fmsg').value = '';
+  }, 4200);
+}
+</script>
+</body>
+</html>
